@@ -7,7 +7,7 @@ def distance_updated(new_distance):
     print("New distance: ", new_distance)
 
 
-sensor = ExtendedDistanceSensor(echo=18, trigger=17)
+sensor = ExtendedDistanceSensor(echo=24, trigger=23)
 sensor.bind_to(distance_updated)
 while True:
     # distance_velocity = sensor.get_distance_velocity()

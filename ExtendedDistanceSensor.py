@@ -25,6 +25,12 @@ class ExtendedDistanceSensor(DistanceSensor, object):
         for callback in self._observers:
             callback(self.distance)
 
+    @DistanceSensor.value.setter
+    def value(self, new_value):
+        self.value = new_value
+        for callback in self._observers:
+            callback(self.value)
+
     def bind_to(self, callback):
         self._observers.append(callback)
 
