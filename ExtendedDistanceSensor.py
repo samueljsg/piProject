@@ -3,14 +3,40 @@ from DistanceVelocityHolder import DistanceVelocityHolder
 from time import sleep
 
 
-class ExtendedDistanceSensor(DistanceSensor):
+class ExtendedDistanceSensor(DistanceSensor, object):
     default_time_step = 0.00001
 
     def __init__(self, echo, trigger):
-        DistanceSensor.__init(self, echo=echo, trigger=trigger)
+        DistanceSensor.__init__(self, echo=echo, trigger=trigger)
+        self._observers = []
+
+    @property
+    def distance(self):
+        """
+        Returns the current distance measured by the sensor in meters. Note
+        that this property will have a value between 0 and
+        :attr:`max_distance`.
+        """
+        return self.value * self._max_distance
+
+    @distance.setter
+    def distance(self, new_value):
+        self.distance = new_value
+        for callback in self._observers:
+            callback(self.distance)
+
+    def bind_to(self, callback):
+        self._observers.append(callback)
+
+    def unregister_from(self, callback):
+        try:
+            self._observers.remove(callback)
+        except:
+            print("No observer existed")
 
     def get_average_distance(self, sample_size=5) -> float:
         distance_sum = 0
+
         for i in range(0, sample_size):
             distance_sum += self.distance * 180
         return distance_sum / sample_size
