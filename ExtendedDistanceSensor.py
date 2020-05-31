@@ -1,5 +1,5 @@
 from gpiozero import DistanceSensor
-import DistanceVelocityHolder
+from DistanceVelocityHolder import DistanceVelocityHolder
 from time import sleep
 
 
