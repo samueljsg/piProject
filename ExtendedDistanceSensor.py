@@ -25,6 +25,16 @@ class ExtendedDistanceSensor(DistanceSensor, object):
         for callback in self._observers:
             callback(self.distance)
 
+    @property
+    def value(self):
+        """
+        Returns a value between 0, indicating the reflector is either touching
+        the sensor or is sufficiently near that the sensor can't tell the
+        difference, and 1, indicating the reflector is at or beyond the
+        specified *max_distance*.
+        """
+        return super(ExtendedDistanceSensor, self).value
+
     @DistanceSensor.value.setter
     def value(self, new_value):
         self.value = new_value
