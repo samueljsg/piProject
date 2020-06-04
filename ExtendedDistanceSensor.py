@@ -1,6 +1,10 @@
 from gpiozero import DistanceSensor
 from DistanceVelocityHolder import DistanceVelocityHolder
-from time import sleep
+from time import sleep, time
+
+
+def current_time() -> int:
+    return int(round(time.time() * 1000))
 
 
 class ExtendedDistanceSensor(DistanceSensor, object):
@@ -35,4 +39,4 @@ class ExtendedDistanceSensor(DistanceSensor, object):
 
     def _read(self):
         for callback in self._observers:
-            callback(super(ExtendedDistanceSensor,self)._read())
+            callback(super(ExtendedDistanceSensor, self)._read(), current_time())
