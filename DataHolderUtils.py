@@ -1,5 +1,3 @@
-
-
 class TimeValueHolder(object):
     def __init__(self, value, time_in_millis):
         self.value = value
@@ -21,7 +19,7 @@ class FixedNumberArray(list):
         self._max_size = array_size
 
     def append(self, item):
-        if (not type(item) is float) or (not type(item) is int):
+        if not isinstance(item, (float, int)):
             raise TypeError("Only floats and ints are allowed")
         list.append(self, item)
         if len(self) > self._max_size:
@@ -37,9 +35,9 @@ class FixedNumberArray(list):
             self.append(item)
 
     def __setitem__(self, key, value):
-        if not type(key) is int:
+        if not isinstance(key, int):
             raise TypeError("Key must be index")
-        if (not type(value) is float) or (not type(value) is int):
+        if not isinstance(value,(int, float)):
             raise TypeError("Value must be a float or int")
         self[key] = value
 
@@ -64,6 +62,15 @@ class FixedArrayTwoPoint:
         self.time_array.append(time_value_holder.time_in_millis)
 
     def add(self, value: float, time: int):
-        self.value_array.append(value)
-        self.time_array.append(time)
-        print("Time: ", time, " Value: ", value)
+        try:
+            #print("Time: ", time, " Value: ", value)
+            #print(isinstance(time, (float, int)), type(value))
+            self.value_array.append(value)
+            self.time_array.append(time)
+        except:
+            print("Not allowed type")
+
+    def get_derivative_first_two(self):
+        time_value_one = TimeValueHolder(self.value_array[0], self.time_array[0])
+        time_value_two = TimeValueHolder(self.value_array[1], self.time_array[1])
+        return derivative(time_value_one, time_value_two)

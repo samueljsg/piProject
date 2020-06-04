@@ -1,6 +1,6 @@
 from gpiozero import DistanceSensor
 from DistanceVelocityHolder import DistanceVelocityHolder
-from time import sleep, time
+import time
 
 
 def current_time() -> int:
@@ -10,8 +10,8 @@ def current_time() -> int:
 class ExtendedDistanceSensor(DistanceSensor, object):
     default_time_step = 0.00001
 
-    def __init__(self, echo, trigger):
-        DistanceSensor.__init__(self, echo=echo, trigger=trigger)
+    def __init__(self, echo, trigger, max_distance=1):
+        DistanceSensor.__init__(self, echo=echo, trigger=trigger, max_distance=max_distance)
         self._observers = []
 
     def bind_to(self, callback):
@@ -39,4 +39,6 @@ class ExtendedDistanceSensor(DistanceSensor, object):
 
     def _read(self):
         for callback in self._observers:
-            callback(super(ExtendedDistanceSensor, self)._read(), current_time())
+            sensor_value = super(ExtendedDistanceSensor, self)._read()
+            if sensor_value is not None:
+                callback(sensor_value * 100, current_time())
