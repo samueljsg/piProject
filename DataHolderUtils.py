@@ -4,14 +4,18 @@ class TimeValueHolder(object):
         self.time_in_millis = time_in_millis
 
 
-def derivative(time_value_one: TimeValueHolder, time_value_two: TimeValueHolder):
+def derivative(time_value_one: TimeValueHolder, time_value_two: TimeValueHolder) -> float:
     value_difference = time_value_two.value - time_value_one.value
     if value_difference == 0.0:
         return 0.0
     time_difference = (time_value_two.time_in_millis - time_value_one.time_in_millis) / 1000.0
     if time_difference == 0:
         return 0
-    return value_difference/time_difference
+    return value_difference / time_difference
+
+
+def derivative(value_one: float, time_one: int, value_two: float, time_two: int) -> float:
+    return derivative(TimeValueHolder(value_one, time_one), TimeValueHolder(value_two, time_two))
 
 
 class FixedNumberArray(list):
@@ -37,7 +41,7 @@ class FixedNumberArray(list):
     def __setitem__(self, key, value):
         if not isinstance(key, int):
             raise TypeError("Key must be index")
-        if not isinstance(value,(int, float)):
+        if not isinstance(value, (int, float)):
             raise TypeError("Value must be a float or int")
         self[key] = value
 
@@ -63,14 +67,18 @@ class FixedArrayTwoPoint:
 
     def add(self, value: float, time: int):
         try:
-            #print("Time: ", time, " Value: ", value)
-            #print(isinstance(time, (float, int)), type(value))
+            # print("Time: ", time, " Value: ", value)
+            # print(isinstance(time, (float, int)), type(value))
             self.value_array.append(value)
             self.time_array.append(time)
         except:
             print("Not allowed type")
 
-    def get_derivative_first_two(self):
+    def get_average_value(self) -> float:
+        return self.value_array.average()
+
+    def get_derivative_first_two(self) -> TimeValueHolder:
         time_value_one = TimeValueHolder(self.value_array[0], self.time_array[0])
         time_value_two = TimeValueHolder(self.value_array[1], self.time_array[1])
-        return derivative(time_value_one, time_value_two)
+        return TimeValueHolder(derivative(time_value_one, time_value_two),
+                               (time_value_two.time_in_millis - time_value_one.time_in_millis) * 1000.0)

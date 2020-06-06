@@ -1,5 +1,4 @@
 from gpiozero import DistanceSensor
-from DistanceVelocityHolder import DistanceVelocityHolder
 import time
 
 
@@ -29,13 +28,6 @@ class ExtendedDistanceSensor(DistanceSensor, object):
         for i in range(0, sample_size):
             distance_sum += self.distance * 180
         return distance_sum / sample_size
-
-    def get_distance_velocity(self, time_step=default_time_step) -> DistanceVelocityHolder:
-        distance1 = self.distance * 180
-        sleep(time_step)
-        distance2 = self.distance * 180
-        velocity = distance2 - distance1 / time_step
-        return DistanceVelocityHolder(distance2 - distance1 / 2, velocity)
 
     def _read(self):
         for callback in self._observers:
